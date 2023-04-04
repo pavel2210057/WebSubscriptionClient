@@ -1,26 +1,29 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
+import Index from "./component/index/Index";
+import Login from "./component/login/Login";
+import Registration from "./component/registration/Registration";
+import Subscription from "./component/subscription/Subscription";
+import NewspaperList from "./component/newspaperList/NewspaperList";
+import SubscriptionSuccess from "./component/subscription/SubscriptionSuccess";
+import AuthRoute from "./component/authRoute/AuthRoute";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div>
+            <BrowserRouter>
+                <Routes>
+                    <Route path='/' element={ <Index /> } />
+                    <Route path='/login' element={ <Login /> } />
+                    <Route path='/registration' element={ <Registration/> } />
+                    <Route path='/subscription' element={ <AuthRoute> <Subscription /> </AuthRoute> } />
+                    <Route path='/success' element={ <AuthRoute> <SubscriptionSuccess /> </AuthRoute> } />
+                    <Route path='/newspaper-list' element={ <AuthRoute> <NewspaperList /> </AuthRoute> } />
+                    <Route path='*' element={ <Navigate to='/' /> } />
+                </Routes>
+            </BrowserRouter>
+        </div>
+    );
 }
 
 export default App;
