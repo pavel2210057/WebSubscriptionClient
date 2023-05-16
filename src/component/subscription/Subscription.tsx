@@ -1,11 +1,11 @@
-import AddressInput from "../addressField/AddressInput";
-import {Input} from "@mui/material";
-import {FormEventHandler, useState} from "react";
-import {MenuBook} from "@mui/icons-material";
-import MainDrawer from "../mainDrawer/MainDrawer";
-import {useAppDispatch} from "../../reducer";
-import {subscribe} from "../../action/Subscription";
-import {useNavigate} from "react-router-dom";
+import { Box, Step, StepContent, StepLabel, Stepper } from "@mui/material"
+import { useState } from "react"
+import { NameStep } from "./NameStep"
+import { AddressStep } from "./AddressStep"
+import { DurationStep } from "./DurationStep"
+import AppBar from "../AppBar/AppBar"
+import { postOrder } from "../../action/Subscription"
+import { useNavigate } from "react-router-dom"
 
 const initialFormState = {
     name: "",
@@ -16,62 +16,80 @@ const initialFormState = {
 }
 
 export default () => {
-    const [formState, setFormState] = useState(initialFormState)
-    const dispatch = useAppDispatch()
+    const [step, setStep] = useState(0)
+
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [patronymic, setPatronymic] = useState("")
+
+    const [address, setAddress] = useState("")
+    const [apartment, setApartment] = useState("")
+    const [room, setRoom] = useState("")
+
+    const [duration, setDuration] = useState("")
+
     const navigate = useNavigate()
 
-    const [menuOpened, openMenu] = useState(false)
-
-    const handleMenuClicked = () => openMenu(true)
-    const handleSurnameChanged = (value: string) => setFormState({...formState, surname: value})
-    const handleNameChanged = (value: string) => setFormState({...formState, surname: value})
-    const handlePatronymicChanged = (value: string) => setFormState({...formState, surname: value})
-    const handleStreetChanged = (value: string) => setFormState({
-        ...formState, address: {...formState.address, street: value}
-    })
-    const handleApartmentChanged = (value: string) => setFormState({
-        ...formState, address: {...formState.address, apartment: value}
-    })
-    const handleRoomChanged = (value: string) => setFormState({
-        ...formState, address: {...formState.address, room: value}
-    })
-    const handleDurationChanged = (value: number) => {
-        if (value < 0 && value < formState.duration)
-            return
-        setFormState({...formState, duration: value})
+    const onBackPressed = () => {
+        if (step > 0)
+            setStep(step - 1)
     }
 
-    const handleSubmit: FormEventHandler = (e) => {
-        e.preventDefault()
-        dispatch(subscribe(formState))
-            .then(() => navigate('/success'))
+    const onNextStepPressed = () => {
+        if (step < 2)
+            setStep(step + 1)
     }
 
-    return <div>
-        <MenuBook onClick={handleMenuClicked} />
-        <form onSubmit={handleSubmit}>
-            <Input type='text' placeholder='Фамилия' value={formState.name}
-                   onChange={(e) => handleSurnameChanged(e.target.value)} />
-            <br />
-            <Input type='text' placeholder='Имя' value={formState.surname}
-                   onChange={(e) => handleNameChanged(e.target.value)} />
-            <br />
-            <Input type='text' placeholder='Отчество' value={formState.patronymic}
-                   onChange={(e) => handlePatronymicChanged(e.target.value)} />
-            <br />
-            <AddressInput onChange={(e) => handleStreetChanged(e.target.value)} />
-            <br />
-            <Input type='text' placeholder='Квартира' value={formState.address.room}
-                   onChange={(e) => handleApartmentChanged(e.target.value)} />
-            <br />
-            <Input type='text' placeholder='Комната' value={formState.address.room}
-                   onChange={(e) => handleRoomChanged(e.target.value)} />
-            <br />
-            <Input type='number' placeholder='Продолжительность' value={formState.duration}
-                   onChange={(e) => handleDurationChanged(Number.parseInt(e.target.value))} />
-            <br />
-            <Input type='submit' />
-        </form>
-        <MainDrawer isOpen={menuOpened} onClose={() => openMenu(false)} />
-    </div>
+    const onSubmitPressed = async () => {
+        const isSuccess = await postOrder(firstName, lastName, patronymic, address, apartment, room, duration)
+        if (isSuccess)
+            navigate('/order/list')
+    }
+
+    return <Box>
+        <AppBar title="Подписка" isAuth />
+        <Box 
+            sx={{
+                paddingTop: "20px",
+                width: "100%",
+                maxWidth: "1024px",
+                margin: "auto",
+                textAlign: "left"
+            }}
+        >
+            <Stepper activeStep={step} orientation="vertical">
+                <Step>
+                    <StepLabel>Укажите ФИО</StepLabel>
+                    <StepContent>
+                        <NameStep
+                            firstName={firstName} onFirstNameChanged={setFirstName}
+                            lastName={lastName} onLastNameChanged={setLastName}
+                            patronymic={patronymic} onPatronymicChanged={setPatronymic}
+                            onSubmit={onNextStepPressed}
+                        />
+                    </StepContent>
+                </Step>
+                <Step>
+                    <StepLabel>Укажите адрес</StepLabel>
+                    <StepContent>
+                        <AddressStep 
+                            address={address} onAddressChanged={setAddress}
+                            apartment={apartment} onApartmentChanged={setApartment}
+                            room={room} onRoomChanged={setRoom}
+                            onSubmit={onNextStepPressed} onBack={onBackPressed}
+                        />
+                    </StepContent>
+                </Step>
+                <Step>
+                    <StepLabel>Укажите срок подписки</StepLabel>
+                    <StepContent>
+                        <DurationStep
+                            duration={duration} onDurationChanged={setDuration}
+                            onSubmit={onSubmitPressed} onBack={onBackPressed}
+                        />
+                    </StepContent>
+                </Step>
+            </Stepper>
+        </Box>
+    </Box>
 }

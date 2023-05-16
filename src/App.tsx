@@ -1,28 +1,31 @@
-import React from 'react';
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
 import Index from "./component/index/Index";
-import Login from "./component/login/Login";
-import Registration from "./component/registration/Registration";
-import Subscription from "./component/subscription/Subscription";
-import NewspaperList from "./component/newspaperList/NewspaperList";
-import SubscriptionSuccess from "./component/subscription/SubscriptionSuccess";
-import AuthRoute from "./component/authRoute/AuthRoute";
+import Login from "./component/Login/Login";
+import Registration from "./component/Registration/Registration";
+import Subscription from "./component/Subscription/Subscription";
+import NewspaperList from "./component/NewspaperList/NewspaperList";
+import AuthRoute from "./component/AuthRoute/AuthRoute";
+import { ThemeProvider } from '@mui/material';
+import { AppTheme } from './Theme';
+import { SubscriptionList } from './component/SubscriptionList/SubscriptionList';
+import { OrderList } from './component/OrderList/OrderList';
 
 function App() {
     return (
-        <div>
+        <ThemeProvider theme={AppTheme}>
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={ <Index /> } />
-                    <Route path='/login' element={ <Login /> } />
-                    <Route path='/registration' element={ <Registration/> } />
-                    <Route path='/subscription' element={ <AuthRoute> <Subscription /> </AuthRoute> } />
-                    <Route path='/success' element={ <AuthRoute> <SubscriptionSuccess /> </AuthRoute> } />
-                    <Route path='/newspaper-list' element={ <AuthRoute> <NewspaperList /> </AuthRoute> } />
+                    <Route path='/login' element={ <AuthRoute authRoute={false}><Login /></AuthRoute> } />
+                    <Route path='/registration' element={ <AuthRoute authRoute={false}><Registration/></AuthRoute> } />
+                    <Route path='/order/create' element={ <AuthRoute authRoute> <Subscription /> </AuthRoute> } />
+                    <Route path='/order/list' element={ <AuthRoute authRoute> <SubscriptionList /> </AuthRoute> } />
+                    <Route path='/newspaper-list' element={ <AuthRoute authRoute> <NewspaperList /> </AuthRoute> } />
+                    <Route path='/private/order/list' element={ <AuthRoute authRoute> <OrderList /> </AuthRoute> } />
                     <Route path='*' element={ <Navigate to='/' /> } />
                 </Routes>
             </BrowserRouter>
-        </div>
+        </ThemeProvider>
     );
 }
 

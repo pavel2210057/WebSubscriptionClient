@@ -1,17 +1,14 @@
-import {AppAction} from "../reducer";
-import {requestLoginUser, requestRegisterUser} from "../api/ApiMethods";
-import {AuthAction} from "../reducer/AuthReducer";
-import {Cookies, CookiesProvider, useCookies} from "react-cookie";
+import {Api} from "../api/ApiMethods";
 
 type RegistrationFormData = {
     readonly username: string,
     readonly email: string,
-    readonly password: string,
-    readonly repeatedPassword: string,
+    readonly password: string
 }
 
-export const register = (formData: RegistrationFormData): AppAction<Boolean> => async (dispatch) => {
-    const result = await requestRegisterUser(formData)
+export const register = async (formData: RegistrationFormData) => {
+    const result = await Api.registerUser(formData)
+    console.log(result)
     return true
 }
 
@@ -20,16 +17,54 @@ type LoginFormData = {
     readonly password: string
 }
 
-export const login = (formData: LoginFormData): AppAction<Boolean> => async (dispatch) => {
-    const result = await requestLoginUser(formData)
+let isAdminCache = false
+
+export const login = async (formData: LoginFormData) => {
+    const result = await Api.loginUser(formData)
 
     if (result.status != 200)
         return false
 
-    dispatch({ type: AuthAction.Login })
     return true
 }
 
-export const isLoggedIn = (cookies: { uid?: string }) => {
-    return cookies.uid != null
+export const logout = async () => {
+    const result = await Api.logoutUser()
+
+    if (result.status != 200)
+        return false
+
+    isAdminCache = false
+    return true
+}
+
+export const isLoggedIn = async (cookies: { session?: string }) => {
+    if (!cookies.session)
+        return false
+
+    try {
+        const result = await Api.checkUser()
+        if (result.status != 200)
+            return false
+    } catch {
+        return false
+    }
+
+    return true
+}
+
+export const checkIsAdmin = async () => {
+    if (isAdminCache)
+        return true
+
+    try {
+        const result = await Api.checkUserAdmin()
+        if (result.status != 200)
+            return false
+    } catch {
+        return false
+    }
+
+    isAdminCache = true
+    return true
 }

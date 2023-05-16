@@ -1,16 +1,35 @@
 import {isLoggedIn} from "../../action/Login";
 import {useCookies} from "react-cookie";
-import * as React from "react";
-import {Navigate} from "react-router-dom";
-import {FunctionComponent} from "react";
+import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import { Box } from "@mui/material";
+import { Loading } from "../Loading/Loading";
 
-const AuthRoute: FunctionComponent<any> = (props) => {
-    const cookies = useCookies()[0]
+type Props = {
+    authRoute: boolean,
+    children: React.ReactNode
+}
 
-    if (!isLoggedIn(cookies))
-        return <Navigate to='/' />
+const AuthRoute = (props: Props) => {
+    const [isLoading, setisLoading] = useState(true)
 
-    return props.children
+    const [cookies] = useCookies()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        isLoggedIn(cookies).then(isAuth => {
+            if (props.authRoute != isAuth)
+                navigate('/')
+            else
+                setisLoading(false)
+        })
+    }, [])
+
+    return <Box>
+        {
+            isLoading ? <Loading /> : props.children
+        }
+    </Box>
 }
 
 export default AuthRoute
