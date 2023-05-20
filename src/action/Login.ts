@@ -1,4 +1,5 @@
 import {Api} from "../api/ApiMethods";
+import { withErrorHandle } from "./requests";
 
 type RegistrationFormData = {
     readonly username: string,
@@ -38,20 +39,13 @@ export const logout = async () => {
     return true
 }
 
-export const isLoggedIn = async (cookies: { session?: string }) => {
+export const isLoggedIn = async (cookies: { session?: string }) => withErrorHandle(async () => {
     if (!cookies.session)
         return false
 
-    try {
-        const result = await Api.checkUser()
-        if (result.status != 200)
-            return false
-    } catch {
-        return false
-    }
-
-    return true
-}
+    const result = await Api.checkUser()
+    return result.status == 200
+})
 
 export const checkIsAdmin = async () => {
     if (isAdminCache)

@@ -24,7 +24,8 @@ export const SubscriptionList = () => {
         <Stack 
             spacing={3}
             sx={{
-                width: "512px",
+                maxWidth: "512px",
+                width: "100%",
                 margin: "auto",
                 paddingTop: "20px"
             }}

@@ -35,12 +35,14 @@ export const OrderList = () => {
 
     return <Box>
         <AppBar title="Заявки на подписку" isAuth />
-        <Stack 
+        <Stack
             sx={{ 
                 paddingTop: "20px", 
-                width: "512px",
+                maxWidth: "512px",
+                width: "100%",
                 margin: "auto"
             }}
+            spacing={3}
         >
             {
                 list == 'loading' ?

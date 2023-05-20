@@ -14,7 +14,7 @@ export default (props: Props) => {
         </Link>
         <Link to="/registration">
             <DrawerButton icon="" title="Регистрация" />
-        </Link>
+        </Link> 
         <Link to="/login">
             <DrawerButton icon="" title="Вход" />
         </Link>

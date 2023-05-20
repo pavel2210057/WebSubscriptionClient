@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, Divider, List, ListItem, ListItemButton, TextField, Typography } from "@mui/material"
+import { Box, CircularProgress, Divider, List, ListItem, ListItemButton, Stack, TextField } from "@mui/material"
 import { useEffect } from "react"
 
 const LoadingBar = () => (<Box sx={{ textAlign: "center" }}>
@@ -12,9 +12,9 @@ type HintProps = {
 }
 
 const Hint = (props: HintProps) => (<ListItem key={props.key}>
-    <ListItemButton
-        onClick={() => props.onClick(props.value)}
-    >{props.value}</ListItemButton>
+    <ListItemButton onClick={() => props.onClick(props.value)}>
+        {props.value}
+    </ListItemButton>
     <Divider component='li' />
 </ListItem>)
 
@@ -32,7 +32,7 @@ export const SearchBar = (props: Props) => {
         console.log(props.query)
     }, [ props.query ])
 
-    return <Box>
+    return <Stack>
         <TextField 
             variant="outlined"
             type="search"
@@ -41,11 +41,9 @@ export const SearchBar = (props: Props) => {
             label={props.label}
             fullWidth
         />
-        <List sx={{ 
-            position: "absolute",
+        <List sx={{
             backgroundColor: '#FFF',
-            zIndex: 1000,
-            width: "1024px"
+            width: "100%"
         }}>
             {
                 props.hintState == 'loading' ?
@@ -53,5 +51,5 @@ export const SearchBar = (props: Props) => {
                     props.hintState.map(hint => <Hint key={hint.id} value={hint.name} onClick={props.onHintClicked} />)
             }
         </List>
-    </Box>
+    </Stack>
 }

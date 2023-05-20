@@ -39,6 +39,8 @@ export namespace Api {
             month_count: value.duration
         })
 
+    export const getPrice = async () => Api.get("/order/price")
+
     export const getSubscriptionList = async () => Api.get('/order/list')
 
     export const getOrderList = async () => Api.get('/private/order/list')
