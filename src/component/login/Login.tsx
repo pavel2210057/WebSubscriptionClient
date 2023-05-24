@@ -1,7 +1,7 @@
 import {useState} from "react";
 import {login} from "../../action/Login";
 import {useNavigate} from "react-router-dom";
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Box, Button, Grid, Stack, TextField } from "@mui/material";
 import AppBar from "../AppBar/AppBar";
 
 const initialFormState = { email: "", password: "" }
@@ -20,39 +20,32 @@ export default () => {
             navigate('/subscription')
     }
 
-    return <Box>
+    return <Box sx={{ minHeight: "95vh" }}>
         <AppBar title="Логин" isAuth={false} />
-        <Grid 
-            container 
+        <Stack
             sx={{
-                justifyContent: "center",
-                paddingTop: "20px"
+                maxWidth: "256px",
+                padding: "20px",
+                margin: "auto"
             }}
+            spacing={2}
         >
-            <Grid container item spacing={3} xs={2}>
-                <Grid item xs={12}>
-                    <TextField
-                        variant="standard"
-                        defaultValue={formState.email} 
-                        onChange={(e) => handleEmailChanged(e.target.value)}
-                        label="Email"
-                        fullWidth 
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <TextField
-                        variant="standard"
-                        type="password"
-                        defaultValue={formState.password}
-                        onChange={(e) => handlePasswordChanged(e.target.value)}
-                        label="Пароль"
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={12}>
-                    <Button variant="contained" onClick={handleSubmit}>Войти</Button>
-                </Grid>
-            </Grid>
-        </Grid>
+            <TextField
+                variant="standard"
+                defaultValue={formState.email} 
+                onChange={(e) => handleEmailChanged(e.target.value)}
+                label="Email"
+                fullWidth 
+            />
+            <TextField
+                variant="standard"
+                type="password"
+                defaultValue={formState.password}
+                onChange={(e) => handlePasswordChanged(e.target.value)}
+                label="Пароль"
+                fullWidth
+            />
+            <Button variant="contained" onClick={handleSubmit}>Войти</Button>
+        </Stack>
     </Box>
 }

@@ -1,5 +1,5 @@
 import { Box, Button, Stack, TextField } from "@mui/material"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 type Props = {
     firstName: string,
@@ -12,10 +12,37 @@ type Props = {
 }
 
 export const NameStep = (props: Props) => {
+    const [firstNameError, setFirstNameError] = useState("")
+    const [lastNameError, setLastNameError] = useState("")
 
-    useEffect(() => {
+    const validateFields = () => {
+        const isFirstNameCorrect = validateFirstName()
+        const isLastNameCorrect = validateLastName()
 
-    }, [ props.firstName, props.lastName, props.patronymic ])
+        return isFirstNameCorrect && isLastNameCorrect
+    }
+
+    const validateFirstName = () => {
+        if (props.firstName.length == 0) {
+            setFirstNameError("Введите имя")
+            return false
+        } else {
+            setFirstNameError("")
+        }
+
+        return true
+    }
+
+    const validateLastName = () => {
+        if (props.lastName.length == 0) {
+            setLastNameError("Введите фамилию")
+            return false
+        } else {
+            setLastNameError("")
+        }
+
+        return true
+    }
 
     return <Box>
         <Stack spacing={3}>
@@ -24,6 +51,8 @@ export const NameStep = (props: Props) => {
                 defaultValue={props.firstName}
                 onChange={e => props.onFirstNameChanged(e.target.value)}
                 label="Имя"
+                error={firstNameError.length > 0}
+                helperText={firstNameError}
                 fullWidth
             />
             <TextField 
@@ -31,18 +60,20 @@ export const NameStep = (props: Props) => {
                 defaultValue={props.lastName}
                 onChange={e => props.onLastNameChanged(e.target.value)}
                 label="Фамилия"
+                error={lastNameError.length > 0}
+                helperText={lastNameError}
                 fullWidth
             />
             <TextField 
                 variant="outlined"
                 defaultValue={props.patronymic}
                 onChange={e => props.onPatronymicChanged(e.target.value)}
-                label="Отчество"
+                label="Отчество (необязательно)"
                 fullWidth
             />
         </Stack>
         <Stack direction="row" paddingTop="20px">
-            <Button variant="contained" onClick={() => props.onSubmit()}>Следующий шаг</Button>
+            <Button variant="contained" onClick={() => validateFields() && props.onSubmit()}>Следующий шаг</Button>
         </Stack>
     </Box>
 }

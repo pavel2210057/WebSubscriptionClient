@@ -8,9 +8,12 @@ export const AppTheme = createTheme({
     },
     typography: {
         h1: {
-            fontFamily: "Roboto, sans-serif",
             color: "#3d3d3d",
             letterSpacing: 0
+        },
+        allVariants: {
+            fontFamily: "Roboto, sans-serif",
+            WebkitFontSmoothing: "antialiased"
         }
     }
 })

@@ -7,14 +7,6 @@ import AppBar from "../AppBar/AppBar"
 import { postOrder } from "../../action/Subscription"
 import { useNavigate } from "react-router-dom"
 
-const initialFormState = {
-    name: "",
-    surname: "",
-    patronymic: "",
-    address: { street: "", apartment: "", room: "" },
-    duration: 0
-}
-
 export default () => {
     const [step, setStep] = useState(0)
 
@@ -46,7 +38,7 @@ export default () => {
             navigate('/order/list')
     }
 
-    return <Box>
+    return <Box sx={{ minHeight: "95vh" }}>
         <AppBar title="Подписка" isAuth />
         <Box 
             sx={{

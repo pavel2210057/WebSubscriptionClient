@@ -19,15 +19,14 @@ export const SubscriptionList = () => {
         setList(list)
     }
 
-    return <Box>
+    return <Box sx={{ minHeight: "95vh" }}>
         <AppBar title="Мои подписки" isAuth />
         <Stack 
             spacing={3}
             sx={{
                 maxWidth: "512px",
-                width: "100%",
                 margin: "auto",
-                paddingTop: "20px"
+                padding: "20px"
             }}
         >
             {

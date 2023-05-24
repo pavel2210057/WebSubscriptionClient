@@ -55,10 +55,10 @@ export const checkIsAdmin = async () => {
         const result = await Api.checkUserAdmin()
         if (result.status != 200)
             return false
+
+        isAdminCache = result.data.is_admin
+        return isAdminCache
     } catch {
         return false
     }
-
-    isAdminCache = true
-    return true
 }

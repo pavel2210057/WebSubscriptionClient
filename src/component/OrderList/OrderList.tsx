@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { Order, getOrderList, rejectOrder } from "../../action/Subscription"
-import { Box, Modal, Stack } from "@mui/material"
+import { Box, Stack } from "@mui/material"
 import { Loading } from "../Loading/Loading"
 import { OrderCard } from "./OrderCard"
 import { RejectModal } from "./RejectModal"
@@ -33,14 +33,15 @@ export const OrderList = () => {
         rejectOrder(orderForReject, message)
     }
 
-    return <Box>
+    return <Box sx={{ minHeight: "95vh" }}>
         <AppBar title="Заявки на подписку" isAuth />
         <Stack
-            sx={{ 
-                paddingTop: "20px", 
+            sx={{
                 maxWidth: "512px",
-                width: "100%",
-                margin: "auto"
+                margin: "auto",
+                paddingLeft: "10px",
+                paddingRight: "10px",
+                padding: "20px"
             }}
             spacing={3}
         >

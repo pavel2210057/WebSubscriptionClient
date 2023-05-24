@@ -1,5 +1,4 @@
 import { Box, CircularProgress, Divider, List, ListItem, ListItemButton, Stack, TextField } from "@mui/material"
-import { useEffect } from "react"
 
 const LoadingBar = () => (<Box sx={{ textAlign: "center" }}>
     <CircularProgress />
@@ -11,11 +10,11 @@ type HintProps = {
     onClick: (value: string) => void
 }
 
-const Hint = (props: HintProps) => (<ListItem key={props.key}>
+const Hint = (props: HintProps) => (<ListItem>
     <ListItemButton onClick={() => props.onClick(props.value)}>
         {props.value}
     </ListItemButton>
-    <Divider component='li' />
+    <Divider component='div' />
 </ListItem>)
 
 type Props = {
@@ -23,14 +22,11 @@ type Props = {
     query: string,
     onQueryChanged: (value: string) => void,
     hintState: 'loading' | { id: string, name: string }[],
-    onHintClicked: (value: string) => void
+    onHintClicked: (value: string) => void,
+    errorText: string
 }
 
 export const SearchBar = (props: Props) => {
-
-    useEffect(() => {
-        console.log(props.query)
-    }, [ props.query ])
 
     return <Stack>
         <TextField 
@@ -39,6 +35,8 @@ export const SearchBar = (props: Props) => {
             value={props.query}
             onChange={e => props.onQueryChanged(e.target.value)}
             label={props.label}
+            error={props.errorText.length > 0}
+            helperText={props.errorText}
             fullWidth
         />
         <List sx={{

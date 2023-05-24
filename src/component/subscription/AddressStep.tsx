@@ -1,4 +1,4 @@
-import { Box, Button, Stack, TextField, Typography, debounce } from "@mui/material"
+import { Button, Stack, TextField, debounce } from "@mui/material"
 import { SearchBar } from "../SearchBar/SearchBar"
 import { useCallback, useState } from "react"
 import { getAddressesByQuery } from "../../action/Subscription"
@@ -16,9 +16,14 @@ type Props = {
 
 export const AddressStep = (props: Props) => {
     const [hint, setHint] = useState<'loading' | { id: string, name: string }[]>([])
+    const [isHintSelected, setIsHintSelected] = useState(false)
+
+    const [addressError, setAddressError] = useState("")
+    const [apartmentError, setApartmentError] = useState("")
 
     const onHintClicked = async (query: string) => {
         setHint([])
+        setIsHintSelected(true)
         props.onAddressChanged(query)
     }
 
@@ -28,6 +33,7 @@ export const AddressStep = (props: Props) => {
             return
         }
 
+        setIsHintSelected(false)
         setHint('loading')
         const addresses = await getAddressesByQuery(query)
         setHint(addresses)
@@ -40,12 +46,46 @@ export const AddressStep = (props: Props) => {
         loadHintsCallback(query)
     }
 
+    const validateFields = () => {
+        const isAddressCorrect = validateAddress()
+        const isApartmentCorrect = validateApartment()
+
+        return isAddressCorrect && isApartmentCorrect
+    }
+
+    const validateAddress = () => {
+        if (props.address.length == 0) {
+            setAddressError("Введите адрес")
+            return false
+        } else if (!isHintSelected) {
+            setAddressError("Выберите корректный адрес из списка")
+            return false
+        } else {
+            setAddressError("")
+            return true
+        }
+    }
+
+    const validateApartment = () => {
+        if (props.apartment.length == 0) {
+            setApartmentError("Введите номер квартиры")
+            return false
+        } else if (Number.parseInt(props.apartment) < 0) {
+            setApartmentError("Введите корректный номер квартиры")
+            return false
+        } else {
+            setApartmentError("")
+            return true
+        }
+    }
+
     return <Stack spacing={3}>
         <SearchBar
             label="Адрес"
             query={props.address} 
             onQueryChanged={onQueryChanged}
             hintState={hint} onHintClicked={onHintClicked}
+            errorText={addressError}
         />
         <TextField
             variant="outlined"
@@ -53,12 +93,14 @@ export const AddressStep = (props: Props) => {
             label="Квартира"
             value={props.apartment}
             onChange={e => props.onApartmentChanged(e.target.value)}
+            error={apartmentError.length > 0}
+            helperText={apartmentError}
             fullWidth
         />
         <TextField
             variant="outlined"
             type="number"
-            label="Комната"
+            label="Комната (необязательно)"
             value={props.room}
             onChange={e => props.onRoomChanged(e.target.value)}
             fullWidth
@@ -66,7 +108,7 @@ export const AddressStep = (props: Props) => {
         <Stack direction="row" spacing={5}>
             <Button
                 variant="contained"
-                onClick={props.onSubmit}
+                onClick={() => validateFields() && props.onSubmit()}
             >Cледующий шаг</Button>
             <Button
                 variant="outlined"

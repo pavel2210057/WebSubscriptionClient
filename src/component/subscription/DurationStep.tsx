@@ -27,7 +27,7 @@ export const DurationStep = (props: Props) => {
         <TextField
             variant="outlined"
             type="number"
-            InputProps={{ inputProps: { min: 0, max: 12 } }}
+            InputProps={{ inputProps: { min: 1, max: 11 - new Date().getMonth() } }}
             value={props.duration}
             onChange={e => props.onDurationChanged(e.target.value)}
             label="Срок подписки (количество месяцев)"

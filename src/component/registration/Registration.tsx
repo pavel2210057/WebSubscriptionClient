@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { register } from "../../action/Login";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Grid, TextField } from "@mui/material";
+import { Box, Button, Grid, Stack, TextField } from "@mui/material";
 import AppBar from "../AppBar/AppBar";
 
 export default () => {
@@ -41,6 +41,8 @@ export default () => {
             setEmailError("Пустой email")
         else if (email.length > 255)
             setEmailError("Слишком длинный email")
+        else if (!/\S+@\S+\.\S+/.test(email))
+            setEmailError("Введен некорректный email")
         else
             setEmailError("")
     }
@@ -67,65 +69,47 @@ export default () => {
             navigate('/login')
     }
 
-    return <Box>
+    return <Box sx={{ minHeight: "95vh"}}>
         <AppBar title="Регистрация" isAuth={false} />
-        <Grid
-            container
-            sx={{
-                justifyContent: "center",
-                paddingTop: "20px"
-            }}
-        >
-            <Grid container item xs={4} spacing={3}>
-                <Grid item xs={6}>
-                    <TextField
-                        variant='standard'
-                        defaultValue={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        label="Имя пользователя"
-                        error={usernameError.length != 0}
-                        helperText={usernameError}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField 
-                        variant='standard' 
-                        type="email"
-                        defaultValue={email} 
-                        onChange={(e) => setEmail(e.target.value)}
-                        label='Email'
-                        error={emailError.length != 0}
-                        helperText={emailError}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField 
-                        variant='standard' 
-                        type="password"
-                        defaultValue={password} 
-                        onChange={(e) => setPassword(e.target.value)}
-                        label='Пароль'
-                        error={passwordError.length != 0}
-                        helperText={passwordError}
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item xs={6}>
-                    <TextField 
-                        variant='standard'
-                        type="password"
-                        defaultValue={repeatedPassword}
-                        onChange={(e) => setRepeatedPassword(e.target.value)}
-                        label='Повторите пароль'
-                        fullWidth
-                    />
-                </Grid>
-                <Grid item>
-                    <Button variant='text' onClick={onSubmit}>Регистрация</Button>
-                </Grid>
-            </Grid>
-        </Grid>
+        <Stack sx={{ maxWidth: "256px", padding: "20px", margin: "auto" }} spacing={2}>
+            <TextField
+                variant='standard'
+                defaultValue={username}
+                onChange={(e) => setUsername(e.target.value)}
+                label="Имя пользователя"
+                error={usernameError.length != 0}
+                helperText={usernameError}
+                fullWidth
+            />
+            <TextField 
+                variant='standard' 
+                type="email"
+                defaultValue={email} 
+                onChange={(e) => setEmail(e.target.value)}
+                label='Email'
+                error={emailError.length != 0}
+                helperText={emailError}
+                fullWidth
+            />
+            <TextField 
+                variant='standard' 
+                type="password"
+                defaultValue={password} 
+                onChange={(e) => setPassword(e.target.value)}
+                label='Пароль'
+                error={passwordError.length != 0}
+                helperText={passwordError}
+                fullWidth
+            />
+            <TextField 
+                variant='standard'
+                type="password"
+                defaultValue={repeatedPassword}
+                onChange={(e) => setRepeatedPassword(e.target.value)}
+                label='Повторите пароль'
+                fullWidth
+            />
+            <Button variant='text' onClick={onSubmit}>Регистрация</Button>
+        </Stack>
     </Box>
 }
